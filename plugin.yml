@@ -1,0 +1,11 @@
+name: InfiniteWaterBucket
+author: Darrionat
+main: me.darrionat.infinitebucket.InfiniteWaterBucket
+version: 1.0
+description: A custom item that allows an infinite water bucket
+api-version: 1.13
+
+commands:
+  infinitebucket:
+    aliases: [ib]
+    usage: /<command> [player]
