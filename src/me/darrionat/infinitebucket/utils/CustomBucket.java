@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.darrionat.infinitebucket.InfiniteWaterBucket;
+import me.darrionat.infinitebucket.enums.Fluid;
 
 public class CustomBucket {
 
@@ -23,13 +25,20 @@ public class CustomBucket {
 	public int customModelData;
 	public ItemStack bucket;
 
-	public CustomBucket(InfiniteWaterBucket plugin) {
+	public CustomBucket(InfiniteWaterBucket plugin, Fluid fluid) {
 		config = plugin.getConfig();
-		type = Material.WATER_BUCKET;
-		name = Utils.chat(config.getString("name"));
-		lore = config.getStringList("lore");
-		customModelDataEnabled = config.getBoolean("customModelData.enabled");
-		customModelData = config.getInt("customModelData.data");
+		String fluidStr = fluid.toString().toLowerCase();
+		if (fluid == Fluid.WATER) {
+			type = Material.WATER_BUCKET;
+		}
+		if (fluid == Fluid.LAVA) {
+			type = Material.LAVA_BUCKET;
+		}
+		ConfigurationSection section = config.getConfigurationSection(fluidStr);
+		name = Utils.chat(section.getString("name"));
+		lore = section.getStringList("lore");
+		customModelDataEnabled = section.getBoolean("customModelData.enabled");
+		customModelData = section.getInt("customModelData.data");
 		bucket = getBucket();
 	}
 

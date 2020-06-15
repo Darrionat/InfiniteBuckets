@@ -8,17 +8,21 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.darrionat.infinitebucket.InfiniteWaterBucket;
+import me.darrionat.infinitebucket.enums.Fluid;
 import me.darrionat.infinitebucket.utils.CustomBucket;
 
 public class BucketEvent implements Listener {
 
 	private InfiniteWaterBucket plugin;
-	private CustomBucket customBucket;
+	private CustomBucket waterBucket;
+	private CustomBucket lavaBucket;
 
 	public BucketEvent(InfiniteWaterBucket plugin) {
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
-		customBucket = new CustomBucket(plugin);
+		waterBucket = new CustomBucket(plugin, Fluid.WATER);
+		lavaBucket = new CustomBucket(plugin, Fluid.LAVA);
+
 	}
 
 	@EventHandler
@@ -26,13 +30,18 @@ public class BucketEvent implements Listener {
 		Player p = event.getPlayer();
 		@SuppressWarnings("deprecation")
 		ItemStack item = p.getItemInHand();
-		if (customBucket.isCustomBucket(item)) {
-			returnBucket(p, item);
+		if (waterBucket.isCustomBucket(item)) {
+			returnBucket(p, waterBucket.bucket);
+			return;
+		}
+		if (lavaBucket.isCustomBucket(item)) {
+			returnBucket(p, lavaBucket.bucket);
+			return;
 		}
 	}
 
-	public void returnBucket(Player p, ItemStack item) {
+	public void returnBucket(Player p, ItemStack bucket) {
 		plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin,
-				() -> p.getInventory().setItem(p.getInventory().getHeldItemSlot(), customBucket.bucket));
+				() -> p.getInventory().setItem(p.getInventory().getHeldItemSlot(), bucket));
 	}
 }
